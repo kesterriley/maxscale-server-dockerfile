@@ -1,4 +1,4 @@
-FROM kesterriley/mdb-test-10-4:latest
+FROM centos:centos7
 
 
 #################################################################################
@@ -15,12 +15,33 @@ LABEL maintainer="Kester Riley <kesterriley@hotmail.com>" \
 
 COPY entrypoint.sh /entrypoint.sh
 
-RUN yum install maxscale -y && \
-    yum clean all -y && \
-    chmod g=u /etc/passwd && \
-    chmod +x entrypoint.sh && \
-    chmod -R g=u /var/{lib,run,cache}/maxscale && \
-    chgrp -R 0 /var/{lib,run,cache}/maxscale
+
+RUN set -x \
+  && yum update -y \
+  && yum install -y epel-release \
+  && yum install -y \
+  wget \
+  netcat \
+  pigz \
+  pv \
+  iproute \
+  socat \
+  bind-utils \
+  pwgen \
+  psmisc \
+  which
+
+
+ENV MARIADB_SERVER_VERSION 10.4
+
+RUN curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version="mariadb-$MARIADB_SERVER_VERSION" \
+  && yum install -y \
+    maxscale \
+  && yum clean all \
+  && chmod g=u /etc/passwd \
+  && chmod +x entrypoint.sh \
+  && chmod -R g=u /var/{lib,run,cache}/maxscale \
+  && chgrp -R 0 /var/{lib,run,cache}/maxscale
 
 
 COPY maxscale.cnf /etc/maxscale.cnf
