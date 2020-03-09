@@ -1,5 +1,11 @@
 
-cd /Users/kester/dockercontainers/kdr-mdb-10-4-maxscale
-docker build --rm -t mdb-test-10-4-maxscale .
-docker tag <BUILDHASHID> kesterriley/mdb-test-10-4-maxscale:latest
-docker push kesterriley/mdb-test-10-4-maxscale:latest
+Docker image is built and pushed on check-in to git via circle ci
+
+ kesterriley/mdb-test-10-4-maxscale:latest
+
+
+
+
+To validatge circle ci config
+
+circleci config validate
