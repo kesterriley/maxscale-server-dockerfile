@@ -21,6 +21,8 @@ log_warning=off
 log_debug=off
 # Enable the setting of making this a active / passive cluster
 passive=$MAX_PASSIVE
+# Set a Version Name to identify a host
+version_string=$MAX_SERVER
 
 ############################################
 ## Settings for splitting read and writes ##

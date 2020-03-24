@@ -72,4 +72,5 @@ ENV SERVICE_USER=maxscale \
     DB1_PRIO=1 \
     DB2_PRIO=2 \
     DB3_PRIO=3 \
-    MAX_PASSIVE=false
+    MAX_PASSIVE=false \
+    MAX_SERVER=default
