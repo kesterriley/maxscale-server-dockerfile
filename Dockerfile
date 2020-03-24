@@ -71,4 +71,5 @@ ENV SERVICE_USER=maxscale \
     DB3_PORT=3306 \
     DB1_PRIO=1 \
     DB2_PRIO=2 \
-    DB3_PRIO=3
+    DB3_PRIO=3 \
+    MAX_PASSIVE=false

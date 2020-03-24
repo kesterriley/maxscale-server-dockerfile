@@ -19,6 +19,8 @@ log_notice=on
 log_warning=off
 # Enable or disable the logging of messages whose syslog priority is debug
 log_debug=off
+# Enable the setting of making this a active / passive cluster
+passive=$MAX_PASSIVE
 
 ############################################
 ## Settings for splitting read and writes ##
