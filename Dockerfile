@@ -43,9 +43,6 @@ RUN curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s 
   && chmod -R g=u /var/{lib,run,cache}/maxscale \
   && chgrp -R 0 /var/{lib,run,cache}/maxscale
 
-
-COPY maxscale.cnf /etc/maxscale.cnf
-
 USER 1001
 
 ENTRYPOINT ["/entrypoint.sh"]
