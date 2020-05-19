@@ -46,20 +46,20 @@ else
   slave_list=""
   synced_list=""
 
-  process_arguments $@
-  read -r -d '' MESSAGE << EOM
-  A server has changed state. The following information was provided:
+process_arguments $@
+read -r -d '' MESSAGE << EOM
+A server has changed state. The following information was provided:
 
-  Initiator: $initiator
-  Parent: $parent
-  Children: $children
-  Event: $event
-  Node list: $node_list
-  List: $list
-  Master list: $master_list
-  Slave list: $slave_list
-  Synced list: $synced_list
-  EOM
+Initiator: $initiator
+Parent: $parent
+Children: $children
+Event: $event
+Node list: $node_list
+List: $list
+Master list: $master_list
+Slave list: $slave_list
+Synced list: $synced_list
+EOM
 
   if [[ $CHANGE_MASTER_HOST_1 = "none" ]] && [[ $CHANGE_MASTER_HOST_2 = "none" ]]
   then
