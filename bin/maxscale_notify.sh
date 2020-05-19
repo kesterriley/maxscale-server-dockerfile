@@ -66,6 +66,10 @@ else
       lv_master_host=`echo $lv_master_to_use | cut -f1 -d":"`
       lv_master_port=`echo $lv_master_to_use | cut -f2 -d":"`
 
+      #Ensure all slaces are stopped first STOP ALL SLAVES;
+      echo "STOP ALL SLAVES;" > /tmp/change_master.sql
+      mariadb -u$MONITOR_USER -p$MONITOR_PWD -h$lv_master_host -P$lv_master_port < /tmp/change_master.sql || exit 1
+      rm -rf /tmp/change_master.sql
 
       if [[ $CHANGE_MASTER_HOST_1 = "none" ]]
       then
