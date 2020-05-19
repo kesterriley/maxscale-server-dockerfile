@@ -32,12 +32,12 @@ RUN set -x \
   psmisc \
   which
 
-
 ENV MARIADB_SERVER_VERSION 10.4
 
 RUN curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version="mariadb-$MARIADB_SERVER_VERSION" \
   && yum install -y \
     maxscale \
+    MariaDB-client \
   && yum clean all \
   && chmod g=u /etc/passwd \
   && chmod +x entrypoint.sh \
