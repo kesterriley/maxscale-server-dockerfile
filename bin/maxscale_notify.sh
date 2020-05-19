@@ -43,13 +43,30 @@ process_arguments()
 }
 
 
+process_arguments $@
+read -r -d '' MESSAGE << EOM
+A server has changed state. The following information was provided:
+
+Initiator: $initiator
+Parent: $parent
+Children: $children
+Event: $event
+Node list: $node_list
+List: $list
+Master list: $master_list
+Slave list: $slave_list
+Synced list: $synced_list
+EOM
+
+
+
 if [[ $CHANGE_MASTER_HOST_1 = "none" ]] && [[ $CHANGE_MASTER_HOST_2 = "none" ]]
 then
    echo "No change master required"
 else
   if [[ -z $master_list ]]
   then
-     echo "*** Master to use list is empty ***"
+     echo "*** Master list is empty ***"
   else
 
     if [[ $event = "new_master" ]]
@@ -94,22 +111,9 @@ else
   fi
 fi
 
-process_arguments $@
-read -r -d '' MESSAGE << EOM
-A server has changed state. The following information was provided:
 
-Initiator: $initiator
-Parent: $parent
-Children: $children
-Event: $event
-Node list: $node_list
-List: $list
-Master list: $master_list
-Slave list: $slave_list
-Synced list: $synced_list
-EOM
 
 # print message to file
 echo "$MESSAGE" > /tmp/maxscaleoutout.txt
 # email the message
-echo "$MESSAGE" | mail -s "MaxScale received $event event for initiator $initiator." $NOTIFY_EMAIL
+#echo "$MESSAGE" | mail -s "MaxScale received $event event for initiator $initiator." $NOTIFY_EMAIL
