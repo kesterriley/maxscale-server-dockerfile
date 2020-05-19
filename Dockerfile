@@ -14,6 +14,7 @@ LABEL maintainer="Kester Riley <kesterriley@hotmail.com>" \
       date="2020-01-10"
 
 COPY entrypoint.sh /entrypoint.sh
+COPY ./bin/*.sh /usr/local/bin/
 
 
 RUN set -x \
@@ -41,7 +42,8 @@ RUN curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s 
   && chmod g=u /etc/passwd \
   && chmod +x entrypoint.sh \
   && chmod -R g=u /var/{lib,run,cache}/maxscale \
-  && chgrp -R 0 /var/{lib,run,cache}/maxscale
+  && chgrp -R 0 /var/{lib,run,cache}/maxscale \
+  && chmod -R 777 /usr/local/bin/*.sh
 
 USER 1001
 
