@@ -94,7 +94,7 @@ else
       else
          echo "Running change master on master server $lv_master_to_use to $CHANGE_MASTER_HOST_1"
          echo "CHANGE MASTER '${CHANGE_MASTER_NAME_1}' TO master_use_gtid = slave_pos, MASTER_HOST='$CHANGE_MASTER_HOST_1', MASTER_USER='$MONITOR_USER', MASTER_PASSWORD='$MONITOR_PWD', MASTER_CONNECT_RETRY=10; START SLAVE '${CHANGE_MASTER_NAME_1}';" > /tmp/change_master.sql
-         mariadb -u$MONITOR_USER -p$MONITOR_PWD -h$lv_master_host -P$lv_master_port < /tmp/change_master.sql || exit 1
+         mariadb -umariadb -pmariadb -h$lv_master_host -P$lv_master_port < /tmp/change_master.sql || exit 1
          rm -rf /tmp/change_master.sql
       fi
 
@@ -104,7 +104,7 @@ else
       else
          echo "Running change master on master server $lv_master_to_use to $CHANGE_MASTER_HOST_2"
          echo "CHANGE MASTER '${CHANGE_MASTER_NAME_2}' TO master_use_gtid = slave_pos, MASTER_HOST='$CHANGE_MASTER_HOST_2', MASTER_USER='$MONITOR_USER', MASTER_PASSWORD='$MONITOR_PWD', MASTER_CONNECT_RETRY=10; START SLAVE '${CHANGE_MASTER_NAME_2}';" > /tmp/change_master.sql
-         mariadb -u$MONITOR_USER -p$MONITOR_PWD -h$lv_master_host -P$lv_master_port < /tmp/change_master.sql || exit 1
+         mariadb -umariadb -p$mariadb -h$lv_master_host -P$lv_master_port < /tmp/change_master.sql || exit 1
          rm -rf /tmp/change_master.sql
       fi
     fi
