@@ -1,6 +1,13 @@
 #!/bin/bash
 
 
+
+if [[ $MAX_PASSIVE = "true" ]];
+then
+   echo "NOTIFY SCRIPT: Server is Passive, exiting"
+   exit
+fi
+
 # Example output
 #Script returned 127 on event 'master_down'. Script was: '/usr/local/bin/maxscale_notify.sh --initiator=[ukdc-kdr-galera-1.uk.svc.cluster.local]:3306 --parent= --children= --event=master_down --node_list=[ukdc-kdr-galera-0.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306 --list=[ukdc-kdr-galera-0.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-1.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306 --master_list=[ukdc-kdr-galera-0.uk.svc.cluster.local]:3306 --slave_list=[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306 --synced_list=[ukdc-kdr-galera-0.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306'
 
