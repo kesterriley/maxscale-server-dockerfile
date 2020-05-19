@@ -1,6 +1,30 @@
 #!/bin/bash
 
-
+process_arguments()
+{
+   while [ "$1" != "" ]; do
+      if [[ "$1" =~ ^--initiator=.* ]]; then
+         initiator=${1#'--initiator='}
+      elif [[ "$1" =~ ^--parent.* ]]; then
+         parent=${1#'--parent='}
+      elif [[ "$1" =~ ^--children.* ]]; then
+         children=${1#'--children='}
+      elif [[ "$1" =~ ^--event.* ]]; then
+         event=${1#'--event='}
+      elif [[ "$1" =~ ^--node_list.* ]]; then
+         node_list=${1#'--node_list='}
+      elif [[ "$1" =~ ^--list.* ]]; then
+         list=${1#'--list='}
+      elif [[ "$1" =~ ^--master_list.* ]]; then
+         master_list=${1#'--master_list='}
+      elif [[ "$1" =~ ^--slave_list.* ]]; then
+         slave_list=${1#'--slave_list='}
+      elif [[ "$1" =~ ^--synced_list.* ]]; then
+         synced_list=${1#'--synced_list='}
+      fi
+      shift
+   done
+}
 
 if [[ $MAX_PASSIVE = "true" ]];
 then
@@ -22,33 +46,6 @@ else
   slave_list=""
   synced_list=""
 
-  process_arguments()
-  {
-     while [ "$1" != "" ]; do
-        if [[ "$1" =~ ^--initiator=.* ]]; then
-           initiator=${1#'--initiator='}
-        elif [[ "$1" =~ ^--parent.* ]]; then
-           parent=${1#'--parent='}
-        elif [[ "$1" =~ ^--children.* ]]; then
-           children=${1#'--children='}
-        elif [[ "$1" =~ ^--event.* ]]; then
-           event=${1#'--event='}
-        elif [[ "$1" =~ ^--node_list.* ]]; then
-           node_list=${1#'--node_list='}
-        elif [[ "$1" =~ ^--list.* ]]; then
-           list=${1#'--list='}
-        elif [[ "$1" =~ ^--master_list.* ]]; then
-           master_list=${1#'--master_list='}
-        elif [[ "$1" =~ ^--slave_list.* ]]; then
-           slave_list=${1#'--slave_list='}
-        elif [[ "$1" =~ ^--synced_list.* ]]; then
-           synced_list=${1#'--synced_list='}
-        fi
-        shift
-     done
-  }
-
-
   process_arguments $@
   read -r -d '' MESSAGE << EOM
   A server has changed state. The following information was provided:
@@ -63,8 +60,6 @@ else
   Slave list: $slave_list
   Synced list: $synced_list
   EOM
-
-
 
   if [[ $CHANGE_MASTER_HOST_1 = "none" ]] && [[ $CHANGE_MASTER_HOST_2 = "none" ]]
   then
@@ -116,8 +111,6 @@ else
       fi
     fi
   fi
-
-
 
   # print message to file
   echo "$MESSAGE" > /tmp/maxscaleoutout.txt
