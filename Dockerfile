@@ -53,7 +53,7 @@ CMD ["maxscale", "--nodaemon", "--log=stdout"]
 
 EXPOSE 6603 3306 3307 3308 8003
 
-ENV SERVICE_USER=maxscale \
+ENV MAXSCALE_USER=maxscale \
     READ_WRITE_LISTEN_ADDRESS=127.0.0.1 \
     READ_WRITE_PORT=3307 \
     READ_WRITE_PROTOCOL=MariaDBClient \
