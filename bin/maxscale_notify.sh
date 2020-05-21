@@ -69,7 +69,7 @@ process_arguments $@
         TMPFILE=`mktemp`
 
         #Ensure all slaves are stopped first
-        echo "STOP ALL SLAVES;" > $TMPFILE
+        echo "STOP ALL SLAVES; RESET SLAVE ALL;" > $TMPFILE
         mariadb -u$MAXSCALE_USER -p$MAXSCALE_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
 
         if [[ $CHANGE_MASTER_HOST_1 = "none" ]]
