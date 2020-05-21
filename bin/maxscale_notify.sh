@@ -31,11 +31,6 @@ then
    echo "NOTIFY SCRIPT: Server is Passive, exiting"
 else
 
-  # Example output
-  #Script returned 127 on event 'master_down'. Script was: '/usr/local/bin/maxscale_notify.sh --initiator=[ukdc-kdr-galera-1.uk.svc.cluster.local]:3306 --parent= --children= --event=master_down --node_list=[ukdc-kdr-galera-0.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306 --list=[ukdc-kdr-galera-0.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-1.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306 --master_list=[ukdc-kdr-galera-0.uk.svc.cluster.local]:3306 --slave_list=[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306 --synced_list=[ukdc-kdr-galera-0.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306'
-
-  #Script returned 127 on event 'new_master'. Script was: '/usr/local/bin/maxscale_notify.sh --initiator=[ukdc-kdr-galera-1.uk.svc.cluster.local]:3306 --parent= --children= --event=new_master --node_list=[ukdc-kdr-galera-1.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306 --list=[ukdc-kdr-galera-0.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-1.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306 --master_list=[ukdc-kdr-galera-1.uk.svc.cluster.local]:3306 --slave_list=[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306 --synced_list=[ukdc-kdr-galera-1.uk.svc.cluster.local]:3306,[ukdc-kdr-galera-2.uk.svc.cluster.local]:3306
-
   initiator=""
   parent=""
   children=""
@@ -47,19 +42,6 @@ else
   synced_list=""
 
 process_arguments $@
-read -r -d '' MESSAGE << EOM
-A server has changed state. The following information was provided:
-
-Initiator: $initiator
-Parent: $parent
-Children: $children
-Event: $event
-Node list: $node_list
-List: $list
-Master list: $master_list
-Slave list: $slave_list
-Synced list: $synced_list
-EOM
 
   if [[ $CHANGE_MASTER_HOST_1 = "none" ]] && [[ $CHANGE_MASTER_HOST_2 = "none" ]]
   then
@@ -84,19 +66,21 @@ EOM
         lv_master_host=`echo $lv_master_to_use | cut -f1 -d":"`
         lv_master_port=`echo $lv_master_to_use | cut -f2 -d":"`
 
-        #Ensure all slaces are stopped first STOP ALL SLAVES;
-        echo "STOP ALL SLAVES; RESET SLAVE ALL;" > /tmp/change_master.sql
-        mariadb -u$MONITOR_USER -p$MONITOR_PWD -h$lv_master_host -P$lv_master_port < /tmp/change_master.sql || exit 1
+        TMPFILE=`mktemp`
+        
+        #Ensure all slaves are stopped first
+        echo "STOP ALL SLAVES;" > $TMPFILE
+        mariadb -u$MAXSCALE_USER -p$MAXSCALE_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
 
         if [[ $CHANGE_MASTER_HOST_1 = "none" ]]
         then
            echo "No master host set for CHANGE_MASTER_HOST_1"
         else
            echo "Running change master on master server $lv_master_to_use to $CHANGE_MASTER_HOST_1"
-           echo "CHANGE MASTER '${CHANGE_MASTER_NAME_1}' TO master_use_gtid = slave_pos, MASTER_HOST='$CHANGE_MASTER_HOST_1', MASTER_USER='mariadb', MASTER_PASSWORD='mariadb', MASTER_CONNECT_RETRY=10; " > /tmp/change_master.sql
-           mariadb -u$MONITOR_USER -p$MONITOR_PWD -h$lv_master_host -P$lv_master_port < /tmp/change_master.sql || exit 1
-           echo "START SLAVE '${CHANGE_MASTER_NAME_1}';" > /tmp/change_master.sql
-           mariadb -u$MONITOR_USER -p$MONITOR_PWD -h$lv_master_host -P$lv_master_port < /tmp/change_master.sql || exit 1
+           echo "CHANGE MASTER '${CHANGE_MASTER_NAME_1}' TO master_use_gtid = slave_pos, MASTER_HOST='$CHANGE_MASTER_HOST_1', MASTER_USER='$MAXSCALE_USER', MASTER_PASSWORD='$MAXSCALE_USER_PASSWORD', MASTER_CONNECT_RETRY=10; " > $TMPFILE
+           mariadb -u$MAXSCALE_USER -p$MAXSCALE_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
+           echo "START SLAVE '${CHANGE_MASTER_NAME_1}';" > $TMPFILE
+           mariadb -u$MAXSCALE_USER -p$MAXSCALE_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
         fi
 
         if [[ $CHANGE_MASTER_HOST_2 = "none" ]]
@@ -104,17 +88,13 @@ EOM
            echo "No master host set for CHANGE_MASTER_HOST_2"
         else
            echo "Running change master on master server $lv_master_to_use to $CHANGE_MASTER_HOST_2"
-           echo "CHANGE MASTER '${CHANGE_MASTER_NAME_2}' TO master_use_gtid = slave_pos, MASTER_HOST='$CHANGE_MASTER_HOST_2', MASTER_USER='mariadb', MASTER_PASSWORD='mariadb', MASTER_CONNECT_RETRY=10;" > /tmp/change_master.sql
-           mariadb -u$MONITOR_USER -p$MONITOR_PWD -h$lv_master_host -P$lv_master_port < /tmp/change_master.sql || exit 1
-           echo "START SLAVE '${CHANGE_MASTER_NAME_2}';" > /tmp/change_master.sql
-           mariadb -u$MONITOR_USER -p$MONITOR_PWD -h$lv_master_host -P$lv_master_port < /tmp/change_master.sql || exit 1
+           echo "CHANGE MASTER '${CHANGE_MASTER_NAME_2}' TO master_use_gtid = slave_pos, MASTER_HOST='$CHANGE_MASTER_HOST_2', MASTER_USER='$MAXSCALE_USER', MASTER_PASSWORD='$MAXSCALE_USER_PASSWORD', MASTER_CONNECT_RETRY=10;" > $TMPFILE
+           mariadb -u$MAXSCALE_USER -p$MAXSCALE_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
+           echo "START SLAVE '${CHANGE_MASTER_NAME_2}';" > $TMPFILE
+           mariadb -u$MAXSCALE_USER -p$MAXSCALE_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
         fi
+        rm $TMPFILE
       fi
     fi
   fi
-
-  # print message to file
-  echo "$MESSAGE" > /tmp/maxscaleoutout.txt
-  # email the message
-  #echo "$MESSAGE" | mail -s "MaxScale received $event event for initiator $initiator." $NOTIFY_EMAIL
 fi
