@@ -52,9 +52,34 @@ process_arguments $@
        echo "*** Master list is empty ***"
     else
 
+
+
+#2020-05-21 17:57:01   notice : Executed monitor script on event 'lost_master'. Script was: '/usr/local/bin/maxscale_notify.sh --initiator=[usdc-kdr-galera-0.us.svc.cluster.local]:3306 --parent= --children= --event=lost_master --node_list=[usdc-kdr-galera-0.us.svc.cluster.local]:3306,[usdc-kdr-galera-1.us.svc.cluster.local]:3306 --list=[usdc-kdr-galera-0.us.svc.cluster.local]:3306,[usdc-kdr-galera-1.us.svc.cluster.local]:3306,[usdc-kdr-galera-2.us.svc.cluster.local]:3306 --master_list=[usdc-kdr-galera-1.us.svc.cluster.local]:3306 --slave_list= --synced_list=[usdc-kdr-galera-1.us.svc.cluster.local]:3306'
+
+      if [[ $event = "lost_master" ]]
+      then
+        echo "We have lost a master ($initiator), trying to connect and stop slave'"
+        if [[ $initiator =~ "," ]];
+        then
+           echo "... more than one master in list, using first one."
+           lv_initiator=`echo $initiator | cut -f1 -d"," | sed 's/\[//g' | sed 's/\]//g'`
+        else
+           echo "... there is only one master in the list."
+           lv_initiator=`echo $initiator | sed 's/\[//g' | sed 's/\]//g'`
+        fi
+        lv_master_host=`echo $lv_initiator | cut -f1 -d":"`
+        lv_master_port=`echo $lv_initiator | cut -f2 -d":"`
+        # This may fail depending on why server went away
+        TMPFILE=`mktemp`
+        echo "STOP ALL SLAVES; RESET SLAVE ALL;" > $TMPFILE
+        mariadb -u$MAXSCALE_USER -p$MAXSCALE_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
+        rm $TMPFILE
+      fi
+
+
       if [[ $event = "new_master" ]]
       then
-        echo "Dectected master down, new master list = '$master_list'"
+        echo "Dectected a new master event, new master list = '$master_list'"
         if [[ $master_list =~ "," ]];
         then
            echo "... more than one master in list, using first one."
