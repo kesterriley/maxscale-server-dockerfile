@@ -54,7 +54,6 @@ process_arguments $@
 
 
 
-#2020-05-21 17:57:01   notice : Executed monitor script on event 'lost_master'. Script was: '/usr/local/bin/maxscale_notify.sh --initiator=[usdc-kdr-galera-0.us.svc.cluster.local]:3306 --parent= --children= --event=lost_master --node_list=[usdc-kdr-galera-0.us.svc.cluster.local]:3306,[usdc-kdr-galera-1.us.svc.cluster.local]:3306 --list=[usdc-kdr-galera-0.us.svc.cluster.local]:3306,[usdc-kdr-galera-1.us.svc.cluster.local]:3306,[usdc-kdr-galera-2.us.svc.cluster.local]:3306 --master_list=[usdc-kdr-galera-1.us.svc.cluster.local]:3306 --slave_list= --synced_list=[usdc-kdr-galera-1.us.svc.cluster.local]:3306'
 
       if [[ $event = "lost_master" ]]
       then
