@@ -1,43 +1,49 @@
 FROM centos:centos7
 
-
 #################################################################################
 # PLEASE NOTE YOU MUST HAVE AN ENTERPRISE MARIADB LICENSE FOR THIS INSTALLATION #
 #################################################################################
 
-LABEL maintainer="Kester Riley <kesterriley@hotmail.com>" \
-      description="MariaDB 10.4 MaxScale" \
-      name="mariadb-server" \
-      url="https://mariadb.com/kb/en/mariadb-1040-release-notes/" \
+ENV MARIADB_SERVER_VERSION 10.4
+
+# Build-time metadata as defined at http://label-schema.org
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name="maxscale-server" \
+      org.label-schema.description="MariaDB 10.4 MaxScale" \
+      org.label-schema.url="https://mariadb.com/kb/en/mariadb-1040-release-notes/" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url="https://github.com/kesterriley/mariadb-server-dockerfile" \
+      org.label-schema.vendor="Kester Riley" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.schema-version="1.0" \
+      maintainer="Kester Riley <kesterriley@hotmail.com>" \
       architecture="AMD64/x86_64" \
-      version="10.4.01" \
-      date="2020-01-10"
+      mariadbVersion=$MARIADB_SERVER_VERSION
 
 COPY entrypoint.sh /entrypoint.sh
 COPY ./bin/*.sh /usr/local/bin/
-
 
 RUN set -x \
   && yum update -y \
   && yum install -y epel-release \
   && yum install -y \
-  wget \
-  netcat \
-  pigz \
-  pv \
-  iproute \
-  socat \
-  bind-utils \
-  pwgen \
-  psmisc \
-  which
-
-ENV MARIADB_SERVER_VERSION 10.4
-
-RUN curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version="mariadb-$MARIADB_SERVER_VERSION" \
+          wget \
+          netcat \
+          pigz \
+          pv \
+          iproute \
+          socat \
+          bind-utils \
+          pwgen \
+          psmisc \
+          which \
+  && curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version="mariadb-$MARIADB_SERVER_VERSION" \
   && yum install -y \
-    maxscale \
-    MariaDB-client \
+          maxscale \
+          MariaDB-client \
   && yum clean all \
   && chmod g=u /etc/passwd \
   && chmod +x entrypoint.sh \
@@ -50,8 +56,6 @@ USER 1001
 ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["maxscale", "--nodaemon", "--log=stdout"]
-
-EXPOSE 6603 3306 3307 3308 8003
 
 ENV MAXSCALE_USER=maxscale \
     READ_WRITE_LISTEN_ADDRESS=127.0.0.1 \
