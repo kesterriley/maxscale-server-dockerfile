@@ -1,12 +1,6 @@
 #!/bin/sh
 set -e
 
-if [[ "$MAX_PASSIVE" = "true" ]]
-then
-  echo "Setting this server as a Passive MaxScale Node"
-  sed -i '/passive/s/^#//g' /etc/maxscale.cnf
-fi
-
 if [ "$1" = 'maxscale' ]; then
   if ! whoami &> /dev/null; then
     if [ -w /etc/passwd ]; then
