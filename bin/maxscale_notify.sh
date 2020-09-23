@@ -112,9 +112,9 @@ process_arguments $@
         else
            echo "NOTIFY SCRIPT: Running change master on master server $lv_master_to_use to $CHANGE_MASTER_HOST_1"
            echo "CHANGE MASTER '${CHANGE_MASTER_NAME_1}' TO master_use_gtid = slave_pos, MASTER_HOST='$CHANGE_MASTER_HOST_1', MASTER_USER='$REPLICATION_USER', MASTER_PASSWORD='$REPLICATION_USER_PASSWORD', MASTER_CONNECT_RETRY=10; " > $TMPFILE
-           mariadb -u$MARIADB_USER -p$MARIADB_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
+           mariadb -u$MAXSCALE_USER -p$MAXSCALE_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
            echo "START SLAVE '${CHANGE_MASTER_NAME_1}';" > $TMPFILE
-           mariadb -u$MARIADB_USER -p$MARIADB_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
+           mariadb -u$MAXSCALE_USER -p$MAXSCALE_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
         fi
 
         if [[ $CHANGE_MASTER_HOST_2 = "none" ]]
@@ -123,9 +123,9 @@ process_arguments $@
         else
            echo "NOTIFY SCRIPT: Running change master on master server $lv_master_to_use to $CHANGE_MASTER_HOST_2"
            echo "CHANGE MASTER '${CHANGE_MASTER_NAME_2}' TO master_use_gtid = slave_pos, MASTER_HOST='$CHANGE_MASTER_HOST_2', MASTER_USER='$REPLICATION_USER', MASTER_PASSWORD='$REPLICATION_USER_PASSWORD', MASTER_CONNECT_RETRY=10;" > $TMPFILE
-           mariadb -u$MARIADB_USER -p$MARIADB_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
+           mariadb -u$MAXSCALE_USER -p$MAXSCALE_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
            echo "START SLAVE '${CHANGE_MASTER_NAME_2}';" > $TMPFILE
-           mariadb -u$MARIADB_USER -p$MARIADB_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
+           mariadb -u$MAXSCALE_USER -p$MAXSCALE_USER_PASSWORD -h$lv_master_host -P$lv_master_port < $TMPFILE
         fi
         rm $TMPFILE
       fi
