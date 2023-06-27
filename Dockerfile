@@ -1,10 +1,11 @@
-FROM centos:centos7
+ FROM rockylinux:8
+
 
 #################################################################################
 # PLEASE NOTE YOU MUST HAVE AN ENTERPRISE MARIADB LICENSE FOR THIS INSTALLATION #
 #################################################################################
 
-ENV MARIADB_SERVER_VERSION 10.4
+ENV MARIADB_SERVER_VERSION 10.6
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
@@ -12,8 +13,7 @@ ARG VCS_REF
 ARG VERSION
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="maxscale-server" \
-      org.label-schema.description="MariaDB 10.4 MaxScale" \
-      org.label-schema.url="https://mariadb.com/kb/en/mariadb-1040-release-notes/" \
+      org.label-schema.description="MariaDB 23.02.2 MaxScale" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/kesterriley/mariadb-server-dockerfile" \
       org.label-schema.vendor="Kester Riley" \
