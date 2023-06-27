@@ -7,7 +7,7 @@
 
 Docker image is built and pushed on check-in to git via circle ci
 
- kesterriley/mdb-test-10-4-maxscale:latest
+ kesterriley/mdb-test-23-02-2-maxscale:latest
 
 
 
