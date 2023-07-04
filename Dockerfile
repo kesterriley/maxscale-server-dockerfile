@@ -48,7 +48,9 @@ RUN set -x \
   && chmod +x entrypoint.sh \
   && chmod -R g=u /var/{lib,run,cache}/maxscale \
   && chgrp -R 0 /var/{lib,run,cache}/maxscale \
-  && chmod -R 777 /usr/local/bin/*.sh
+  && chmod -R 777 /usr/local/bin/*.sh \
+  && mkdir -p /var/log/maxscale \
+  && chmod -R 777 /var/log/maxscale
 
 USER 1001
 
