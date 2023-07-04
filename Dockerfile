@@ -48,15 +48,14 @@ RUN set -x \
   && chmod +x entrypoint.sh \
   && chmod -R g=u /var/{lib,run,cache}/maxscale \
   && chgrp -R 0 /var/{lib,run,cache}/maxscale \
-  && chmod -R 777 /usr/local/bin/*.sh \
-  && mkdir -p /var/log/maxscale \
-  && chmod -R 777 /var/log/maxscale
+  && chmod -R 777 /usr/local/bin/*.sh
 
 USER 1001
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["maxscale", "--nodaemon", "--log=stdout"]
+CMD ["maxscale", "--nodaemon"]
+#CMD ["maxscale", "--nodaemon", "--log=stdout"]
 
 ENV MAXSCALE_USER=maxscale \
     READ_WRITE_LISTEN_ADDRESS=127.0.0.1 \
