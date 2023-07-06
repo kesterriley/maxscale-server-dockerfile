@@ -12,7 +12,7 @@ ARG VCS_REF
 ARG VERSION
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="maxscale-server" \
-      org.label-schema.description="MariaDB 23.02.2 MaxScale" \
+      org.label-schema.description="MariaDB 23.02 MaxScale" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/kesterriley/mariadb-server-dockerfile" \
       org.label-schema.vendor="Kester Riley" \

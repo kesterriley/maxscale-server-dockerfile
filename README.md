@@ -7,13 +7,11 @@
 ![GitHub stars](https://img.shields.io/github/stars/kesterriley/maxscale-server-dockerfile?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/kesterriley/maxscale-server-dockerfile?style=social)
 
-The Docker image is built and pushed on check-in to git via circle ci, which is then stored in Docker Hub
 
- kesterriley/mdb-test-23-02-2-maxscale:latest
+## MariaDB MaxScale 23.02.2 server on Rocky Linux 8
 
+https://hub.docker.com/repository/docker/kesterriley/mdb-test-23-02-2-maxscale/general
+https://github.com/kesterriley/maxscale-server-dockerfile
 
+This docker file is built and pushed to dockerhub via circleci on commit.
 
-
-To validate circle ci config
-
-circleci config validate
